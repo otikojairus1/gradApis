@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Exceptions;
+
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+
+use Throwable;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+
+class Handler extends ExceptionHandler
+{
+    /**
+     * A list of the exception types that are not reported.
+     *
+     * @var array
+     */
+    protected $dontReport = [
+        //
+    ];
+
+    /**
+     * A list of the inputs that are never flashed for validation exceptions.
+     *
+     * @var array
+     */
+    protected $dontFlash = [
+        'password',
+        'password_confirmation',
+    ];
+
+    /**
+     * Register the exception handling callbacks for the application.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        // $this->reportable(function (Throwable $e) {
+            
+        
+        // });
+
+        $this->renderable(function (MethodNotAllowedHttpException $e, $request) {
+            return response()->json(['errors'=>'invalid-method'], 405);
+        });
+
+        $this->renderable(function (RouteNotFoundException $e, $request) {
+            return response()->json(['Success'=>'false','errors'=>'unauthorised | invalid Token'], 403);
+        });
+
+        $this->renderable(function (MethodNotAllowedHttpException $e, $request) {
+            return response()->json(['errors'=>'invalid-method'], 405);
+        });
+    }
+}
